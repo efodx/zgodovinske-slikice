@@ -14,16 +14,55 @@ public class MainController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping("/")
-    public List<String> index() {
-        return gameService.getGameList();
+    @GetMapping("/create")
+    public void createGame() {
+        gameService.createGame("1");
     }
 
-    @GetMapping("/{gameName}")
-    public List<String> addStf(@PathVariable(value = "gameName") String adding) {
-         gameService.addGame(adding);
-         return index();
+    @GetMapping("/addPlayers")
+    public void addPlayers() {
+        gameService.addPlayer("1", "1");
+        gameService.addPlayer("1", "2");
+        gameService.addPlayer("1", "3");
+        gameService.addPlayer("1", "4");
+        gameService.addPlayer("1", "5");
+
+        for (int i = 0; i < 11; i++) {
+            gameService.addPlayerCard("1", "1");
+            gameService.addPlayerCard("1", "2");
+            gameService.addPlayerCard("1", "3");
+            gameService.addPlayerCard("1", "4");
+            gameService.addPlayerCard("1", "5");
+        }
     }
 
+    @GetMapping("/start")
+    public void startGame() {
+        gameService.startGame("1");
+    }
 
+    @GetMapping("/play")
+    public void playGame() {
+        gameService.playerAnswer("1","1","something");
+        gameService.playerAnswer("1","2","something");
+        gameService.playerAnswer("1","3","something");
+        gameService.playerAnswer("1","4","something");
+    }
+    @GetMapping("/play5")
+    public void playGame5() {
+        gameService.playerAnswer("1","1","something");
+        gameService.playerAnswer("1","2","something");
+        gameService.playerAnswer("1","3","something");
+        gameService.playerAnswer("1","5","something");
+    }
+
+    @GetMapping("/playsLeft")
+    public long playsLeft() {
+        return gameService.answersLeft("1");
+    }
+
+    @GetMapping("/currentAskingPlayer")
+    public String currentAskingPlayer() {
+        return gameService.currentAskingPlayer("1");
+    }
 }

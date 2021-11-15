@@ -25,22 +25,43 @@ public class Game {
         }
     }
 
+    public long answersLeft() {
+        return players.size() - answers.size() - 1;
+    }
+
+    public String getCurrentAskingPlayerId() {
+        return userAskingId;
+    }
+
     public void answer(String answer, String playerId) {
-        answers.putIfAbsent(playerId, answer);
-        if (!answers.containsKey(playerId)) {
-            countDownLatch.countDown();
+        if (!playerId.equals(userAskingId)) {
+            answers.put(playerId, answer);
         }
-        answers.put(playerId, answer);
     }
 
     public void waitForAnswers() {
-        countDownLatch = new CountDownLatch(players.size());
-        try {
-            countDownLatch.await(Rules.ANSWERS_TIMEOUT, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        long endTime = System.currentTimeMillis() + Rules.ANSWERS_TIMEOUT;
+        while (answers.size() < players.size() - 1 && System.currentTimeMillis() < endTime) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    public void playerAddCard(String id) {
+        Card card = new Card();
+        card.setAnswer("something");
+        card.setQuestion("Anything?");
+        players.stream().filter(p -> p.getId().equals(id)).findFirst().ifPresent(p -> p.addCard(card));
+    }
+
+    public void addPlayer(String id) {
+        Player player = new Player(id, "Player" + id);
+        players.add(player);
+    }
+
 
     public void startGame() {
         if (gameState != GameState.LOBBY) {
@@ -59,7 +80,7 @@ public class Game {
 
 
         gameState = GameState.PLAYING;
-        countDownLatch = new CountDownLatch(players.size());
+        countDownLatch = new CountDownLatch(players.size() - 1);
 
         gameThread = new Thread(this::gameLoop);
         gameThread.start();
@@ -80,19 +101,24 @@ public class Game {
 
     private void gameLoop() {
         while (gameState == GameState.PLAYING) {
+            System.out.println("WAITING FOR ANSWERS.");
             waitForAnswers();
+            System.out.println("MOVING FORWARD.");
             checkAnswersAndAwardPoints();
+            System.out.println("MOVING TO THE NEXT PLAYER.");
             moveToNextPlayer();
         }
+        System.out.println("GAME ENDED DUDE");
     }
 
     private void moveToNextPlayer() {
+        System.out.println("Moved to next player");
         int currentPlayer = players.stream().map(Player::getId).collect(Collectors.toList()).indexOf(userAskingId);
         int nextPlayer;
-        if(currentPlayer==players.size()-1){
+        if (currentPlayer == players.size() - 1) {
             nextPlayer = 0;
-        }else{
-            nextPlayer = currentPlayer+1;
+        } else {
+            nextPlayer = currentPlayer + 1;
         }
         userAskingId = players.get(nextPlayer).getId();
         currentCard = players.get(nextPlayer).getCards().get(0);
