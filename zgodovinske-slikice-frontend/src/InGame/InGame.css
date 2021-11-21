@@ -1,0 +1,94 @@
+.in-game-header {
+    height: 10%;
+    font-size: 2vh;
+    border: solid black;
+    display: flex;
+    justify-content: center;
+}
+
+.answer-section {
+    height: 20%;
+}
+
+.scores-container {
+    border: solid black;
+    padding: 20px;
+    margin: 15px;
+}
+
+.scores-header {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.player-score-container {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+}
+
+
+.whole-game {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.in-game-info-container {
+    height: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-info-container {
+    width: 25%;
+
+}
+
+.middle-info-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.right-info-container {
+    width: 25%;
+}
+
+.answer-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    margin-bottom: auto;
+}
+
+.answer-section-inner{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: auto;
+
+}
+
+.answer-button {
+    border: solid black;
+    padding: 20px;
+    margin-top: 15px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.answer-field {
+    width: 20%;
+    height: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}

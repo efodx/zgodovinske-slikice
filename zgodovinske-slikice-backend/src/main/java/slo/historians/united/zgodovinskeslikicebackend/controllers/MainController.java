@@ -1,12 +1,10 @@
 package slo.historians.united.zgodovinskeslikicebackend.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import slo.historians.united.zgodovinskeslikicebackend.services.GameService;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import slo.historians.united.zgodovinskeslikicebackend.services.GameService;
+import slo.historians.united.zgodovinskeslikicebackend.services.GameStateDTO;
 
 @RestController
 public class MainController {
@@ -14,55 +12,35 @@ public class MainController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping("/create")
-    public void createGame() {
-        gameService.createGame("1");
+    @GetMapping("/game/create")
+    public String createGame() {
+        return gameService.createGame();
     }
 
-    @GetMapping("/addPlayers")
-    public void addPlayers() {
-        gameService.addPlayer("1", "1");
-        gameService.addPlayer("1", "2");
-        gameService.addPlayer("1", "3");
-        gameService.addPlayer("1", "4");
-        gameService.addPlayer("1", "5");
-
-        for (int i = 0; i < 11; i++) {
-            gameService.addPlayerCard("1", "1");
-            gameService.addPlayerCard("1", "2");
-            gameService.addPlayerCard("1", "3");
-            gameService.addPlayerCard("1", "4");
-            gameService.addPlayerCard("1", "5");
-        }
+    @GetMapping("/game/{gameId}")
+    public GameStateDTO showGame(@PathVariable(value = "gameId") String gameId) {
+        return gameService.getGameState(gameId);
     }
 
-    @GetMapping("/start")
-    public void startGame() {
-        gameService.startGame("1");
+    @PostMapping("/game/{gameId}/join")
+    public String joinGame(@PathVariable(value = "gameId") String gameId, @RequestParam String playerName) {
+        return gameService.addPlayer(gameId, playerName);
     }
 
-    @GetMapping("/play")
-    public void playGame() {
-        gameService.playerAnswer("1","1","something");
-        gameService.playerAnswer("1","2","something");
-        gameService.playerAnswer("1","3","something");
-        gameService.playerAnswer("1","4","something");
-    }
-    @GetMapping("/play5")
-    public void playGame5() {
-        gameService.playerAnswer("1","1","something");
-        gameService.playerAnswer("1","2","something");
-        gameService.playerAnswer("1","3","something");
-        gameService.playerAnswer("1","5","something");
+    @GetMapping("/game/{gameId}/start")
+    public void startGame(@PathVariable(value = "gameId") String gameId) {
+        gameService.startGame(gameId);
     }
 
-    @GetMapping("/playsLeft")
-    public long playsLeft() {
-        return gameService.answersLeft("1");
+    @PostMapping("/game/{gameId}/answer")
+    public void answer(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId, @RequestParam String answer) {
+        gameService.playerAnswer(gameId, playerId, answer);
     }
 
-    @GetMapping("/currentAskingPlayer")
-    public String currentAskingPlayer() {
-        return gameService.currentAskingPlayer("1");
+    @PostMapping("/game/{gameId}/addCard")
+    public void addCard(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId, @RequestParam String answer) {
+        gameService.playerAnswer(gameId, playerId, answer);
+        gameService.addPlayerCard(gameId, playerId);
     }
+
 }

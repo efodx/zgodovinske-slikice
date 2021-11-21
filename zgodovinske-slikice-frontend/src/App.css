@@ -1,0 +1,63 @@
+.App {
+    text-align: center;
+}
+
+.main-page {
+    background: bisque;
+    width: 100vw;
+    height: 100vh;
+    align-content: center;
+    display: grid;
+}
+
+.game-selection {
+    display: inline-grid;
+    align-content: center;
+    margin-top: auto;
+    justify-content: center;
+    justify-self: center;
+}
+
+.game-selection-button {
+    display: inline-flex;
+    align-content: center;
+    padding: 15px;
+    font-size: min(7vh, 7vw);
+    background: darkgoldenrod;
+    border: solid black;
+    transition: 0.3s;
+}
+
+.top-button {
+    margin-top: auto;
+    margin-bottom: 5px;
+    border: ridge black;
+}
+
+.bot-button {
+    margin-bottom: auto;
+    margin-top: 5px;
+    border: ridge black;
+}
+
+.bot-button:hover, .top-button:hover {
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
+}
+
+
+.new-game-form {
+    display: grid;
+    justify-self: center;
+    justify-content: center;
+    font-size: 7vmin;
+}
+
+.new-game-form > * {
+    justify-self: center;
+}
+
+.new-game-txt-input {
+    justify-self: center;
+    font-size: 7vmin;
+    margin-bottom: 10px;
+}

@@ -1,9 +1,6 @@
 package slo.historians.united.zgodovinskeslikicebackend.game;
 
-import java.sql.Time;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -14,8 +11,21 @@ public class Game {
     private List<Player> players = new ArrayList<>();
     private GameState gameState = GameState.LOBBY;
     private final Map<String, String> answers = new HashMap<>();
-    private CountDownLatch countDownLatch;
     private Thread gameThread;
+    private String ownerId;
+    private long endTime = 0;
+
+    public Card getCurrentCard() {
+        return currentCard;
+    }
+
+    public Map<String, String> getAnswers() {
+        return answers;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
 
     public void joinGame(Player player) {
         if (players.size() < Rules.MAX_NUMBER_OF_PLAYERS && gameState == GameState.LOBBY) {
@@ -40,7 +50,7 @@ public class Game {
     }
 
     public void waitForAnswers() {
-        long endTime = System.currentTimeMillis() + Rules.ANSWERS_TIMEOUT;
+        endTime = System.currentTimeMillis() + Rules.ANSWERS_TIMEOUT;
         while (answers.size() < players.size() - 1 && System.currentTimeMillis() < endTime) {
             try {
                 Thread.sleep(100);
@@ -57,9 +67,20 @@ public class Game {
         players.stream().filter(p -> p.getId().equals(id)).findFirst().ifPresent(p -> p.addCard(card));
     }
 
-    public void addPlayer(String id) {
-        Player player = new Player(id, "Player" + id);
+    public void addPlayer(String id, String playerName) {
+        Player player = new Player(id, playerName);
         players.add(player);
+        if (players.size() == 1) {
+            ownerId = id;
+        }
+    }
+
+    public void changeOwner(String newOwnerId) {
+        ownerId = newOwnerId;
+    }
+
+    public String getOwner() {
+        return ownerId;
     }
 
 
@@ -80,10 +101,17 @@ public class Game {
 
 
         gameState = GameState.PLAYING;
-        countDownLatch = new CountDownLatch(players.size() - 1);
 
         gameThread = new Thread(this::gameLoop);
         gameThread.start();
+    }
+
+    public String getGameState() {
+        return gameState.toString();
+    }
+
+    public void stop() {
+        gameThread.interrupt();
     }
 
     public void leaveGame(String id) {
@@ -101,18 +129,23 @@ public class Game {
 
     private void gameLoop() {
         while (gameState == GameState.PLAYING) {
-            System.out.println("WAITING FOR ANSWERS.");
             waitForAnswers();
-            System.out.println("MOVING FORWARD.");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             checkAnswersAndAwardPoints();
-            System.out.println("MOVING TO THE NEXT PLAYER.");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             moveToNextPlayer();
         }
-        System.out.println("GAME ENDED DUDE");
     }
 
     private void moveToNextPlayer() {
-        System.out.println("Moved to next player");
         int currentPlayer = players.stream().map(Player::getId).collect(Collectors.toList()).indexOf(userAskingId);
         int nextPlayer;
         if (currentPlayer == players.size() - 1) {
@@ -121,6 +154,10 @@ public class Game {
             nextPlayer = currentPlayer + 1;
         }
         userAskingId = players.get(nextPlayer).getId();
+        if(players.get(nextPlayer).getCards().size() == 0){
+            gameState = GameState.ENDED;
+            return;
+        }
         currentCard = players.get(nextPlayer).getCards().get(0);
         players.get(nextPlayer).getCards().remove(0);
     }
@@ -150,6 +187,11 @@ public class Game {
             answers.clear();
         }
 
+    }
+
+    public long getTimeLeft(){
+        if(endTime==0){ return 0;}
+        return  Math.max(0,endTime - System.currentTimeMillis());
     }
 
 

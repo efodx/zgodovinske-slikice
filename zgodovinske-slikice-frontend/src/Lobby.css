@@ -1,0 +1,95 @@
+
+.lobby-wrapper {
+    display: inline-block;
+    justify-self: center;
+    background-color: burlywood;
+    width: 95vw;
+    height: 95vh;
+    padding: 20px;
+}
+
+.lobby-header {
+    justify-self: center;
+    font-size: 5vmin;
+    background-color: darkgoldenrod;
+    width: 100%;
+    height: 15%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid;
+    border-bottom: none;
+
+}
+
+.lobby-header > h1 {
+    margin: 0px;
+}
+
+.lobby-center-wrapper {
+    display: flex;
+    height: 70%;
+}
+
+.card-adder-wrp {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.card-adder-wrp > * {
+    width: 100%;
+    border: solid black;
+    border-left: none;
+}
+
+.game-info-wrapper {
+    width: 50%;
+    padding-left: 1vw;
+    border: solid black;
+}
+
+.start-container {
+    width: 100%;
+    height: 15%;
+}
+
+.start-button {
+    background-color: peru;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vmin;
+
+
+    border: solid;
+    border-top: none;
+}
+
+.start-button > h1 {
+    margin: 0px;
+}
+
+.players-info-wrapper {
+    font-size: 4vmin;
+    counter-reset: css-counter 0;
+}
+
+.players-info-wrapper li {
+    display: flex;
+    font-size: 4vmin;
+    counter-increment: css-counter 1;
+}
+
+.players-info-wrapper li:before {
+    margin-right: 2vmin;
+    content: counter(css-counter) ".";
+}
+
+.player-name {
+    width: 50%;
+}

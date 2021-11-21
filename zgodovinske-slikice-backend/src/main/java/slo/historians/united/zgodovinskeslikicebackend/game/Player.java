@@ -1,10 +1,12 @@
 package slo.historians.united.zgodovinskeslikicebackend.game;
 
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Data
 public class Player {
     private final String playerName;
     private final String id;
