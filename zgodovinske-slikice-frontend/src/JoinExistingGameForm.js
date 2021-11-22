@@ -30,7 +30,7 @@ class JoinExistingGameForm extends React.Component {
                 <div><input type="text" className="new-game-txt-input" placeholder={"Player123"} value={this.state.playerName} onChange={(e)=>this.handleNameChange(e)}/></div>
                 <label>Game Id</label>
                 <div><input type="text" className="new-game-txt-input" placeholder={"uYifXYRTZL"} value={this.state.gameId} onChange={(e)=>this.handleIdChange(e)}/></div>
-                <div className="game-selection-button" onClick={()=>this.handleSubmit()}>Create Game</div>
+                <div className="game-selection-button" onClick={()=>this.handleSubmit()}>Join Game</div>
             </form>
         );
     }

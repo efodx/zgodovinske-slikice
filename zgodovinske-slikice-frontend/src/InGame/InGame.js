@@ -2,6 +2,8 @@ import SelectedCard from "../SelectedCard/SelectedCard";
 import './InGame.css'
 import {useState} from "react";
 import {Badge, ProgressBar} from "react-bootstrap";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+
 
 function InGameHeader(props) {
     return <div className="in-game-header">
@@ -31,11 +33,31 @@ function Answer(props) {
             handleAnswer();
         }
     }
+    const renderTime = ({ remainingTime }) => {
+      return (
+        <div className="timer">
+          <div className="value">{Math.ceil(props.timeLeft/1000)}</div>
+        </div>
+      );
+    };
 
     return (
         <div className="answer-section">
             <div className="answer-section-inner">
-                <ProgressBar  max={60000} now={props.timeLeft}/>
+                <div className="timer-wrapper">
+                        <CountdownCircleTimer
+                          isPlaying
+                          duration={60}
+                          initialRemainingTime={props.timeLeft/1000}
+                          key={props.timeLeft}
+                          size={80}
+                          colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
+                          onComplete={() => [false, 1000]}
+                        >
+                          {renderTime}
+                        </CountdownCircleTimer>
+                      </div>
+                      <div  className="answer-form">
                 {props.playerAsking != props.playerId &&
                 <input
                     className="answer-field"
@@ -50,6 +72,7 @@ function Answer(props) {
                     className="answer-button" onClick={handleAnswer}>Answer
                 </div>
                 }
+                </div>
             </div>
         </div>
     )
@@ -64,7 +87,8 @@ function InGame(props) {
                 <div className="left-info-container">
                     <div>Current Player Asking = {state.userAskingId}</div>
                 </div>
-                <div className="middle-info-container"><SelectedCard card={state.currentCard}/></div>
+                <div className="middle-info-container">
+                    <SelectedCard key={state.userAskingId} card={state.currentCard}/></div>
                 <div className="right-info-container">
                     <Scores answers={state.answers} players={state.players} playerAsking={state.userAskingId}/>
                 </div>

@@ -6,10 +6,6 @@
     justify-content: center;
 }
 
-.answer-section {
-    height: 20%;
-}
-
 .scores-container {
     border: solid black;
     padding: 20px;
@@ -36,7 +32,7 @@
 }
 
 .in-game-info-container {
-    height: 70%;
+    height: 60%;
     display: flex;
     justify-content: space-between;
 }
@@ -63,7 +59,8 @@
     justify-content: center;
     align-content: center;
     width: 100%;
-    margin-bottom: auto;
+    margin-bottom: 10px;
+    height: 30%;
 }
 
 .answer-section-inner{
@@ -73,22 +70,55 @@
     flex-direction: column;
     justify-content: center;
     align-content: center;
+    align-items: center;
     margin-bottom: auto;
-
 }
 
 .answer-button {
-    border: solid black;
+    height: 100%;
+    border: 1px solid black;
+    box-shadow: 1px 1px;
     padding: 20px;
-    margin-top: 15px;
+    margin-left:5px;
     text-align: center;
-    margin-left: auto;
+    display:flex;
+    justify-content: center;
     margin-right: auto;
+    align-items: center;
+    transition-duration: 0.2s;
+}
+
+.answer-button:hover {
+    box-shadow: 2.5px 2.5px 1px;
 }
 
 .answer-field {
     width: 20%;
-    height: 20%;
+    height: 100%;
     margin-left: auto;
-    margin-right: auto;
+}
+
+.timer-wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  align-items:center;
+}
+
+.timer {
+  font-family: "Montserrat";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.answer-form{
+    height:30%;
+    width:100%;
+    margin-bottom:auto;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content:center;
 }

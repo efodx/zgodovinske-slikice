@@ -34,15 +34,38 @@
 
 .card-adder-wrp {
     width: 50%;
+    height:100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 
 .card-adder-wrp > * {
+    height:100%;
     width: 100%;
     border: solid black;
     border-left: none;
 }
+.drop-zone{
+    border: solid black;
+    width: 30%;
+    border:none;
+    border-left: solid black;
+}
+.handled-files-wrp{
+width:70%;
+}
+
+.add-cards-btn{
+    height:15%;
+}
+
+.file-handling-wrp{
+    height:100%;
+    display:flex;
+    flex-direction: row;
+}
+
 
 .game-info-wrapper {
     width: 50%;

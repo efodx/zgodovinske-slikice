@@ -7,7 +7,7 @@
     height: 90%;
 }
 
-.question-wrapper {
+.question-wrapper {word-wrap: anywhere;
     justify-self: center;
     align-self: center;
     background-color: white;
@@ -20,9 +20,11 @@
 .flip-card {
     background: transparent;
     width: 17vw;
-    height: 27vw;
+    height: calc(27/17*width);
     border: 1px solid #f1f1f1;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    transition-duration: 1s;
+    transition-property: opacity;
 }
 
 /* This container is needed to position the front and back side */
@@ -36,7 +38,7 @@
 }
 
 /* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card:hover .flip-card-inner {
+.flip-card.front-side .flip-card-inner {
     transform: rotateY(180deg);
 }
 
@@ -71,4 +73,12 @@
 .flip-card-back {
     background-color: peru;
     transform: rotateY(180deg);
+}
+
+.flip-card.fading{
+opacity:0;
+}
+
+.flip-card.full{
+opacity:1;
 }
