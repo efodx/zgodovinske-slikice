@@ -60,11 +60,8 @@ public class Game {
         }
     }
 
-    public void playerAddCard(String id) {
-        Card card = new Card();
-        card.setAnswer("something");
-        card.setQuestion("Anything?");
-        players.stream().filter(p -> p.getId().equals(id)).findFirst().ifPresent(p -> p.addCard(card));
+    public void playerAddCard(String playerId, Card card) {
+        players.stream().filter(p -> p.getId().equals(playerId)).findFirst().ifPresent(p -> p.addCard(card));
     }
 
     public void addPlayer(String id, String playerName) {

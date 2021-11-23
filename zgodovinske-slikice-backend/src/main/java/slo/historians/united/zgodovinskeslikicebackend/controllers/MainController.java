@@ -1,7 +1,9 @@
 package slo.historians.united.zgodovinskeslikicebackend.controllers;
 
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +12,10 @@ import slo.historians.united.zgodovinskeslikicebackend.services.GameStateDTO;
 import slo.historians.united.zgodovinskeslikicebackend.utilities.FileUploadUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class MainController {
@@ -47,13 +53,20 @@ public class MainController {
 //        gameService.addPlayerCard(gameId, playerId);
 //    }
 
-    @PostMapping("/game/{gameId}/addCard")
-    public void addCardWithPicture(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId, @RequestParam String answer, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-        String uploadDir = "user-photos/";
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        gameService.addPlayerCard(gameId, playerId);
+    @PostMapping("/game/{gameId}/addCards")
+    public void addCards(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId,
+                         @RequestParam List<String> questions, @RequestPart List<MultipartFile> files,
+                         @RequestParam List<String> answers) throws IOException {
+        for (int i = 0; i < questions.size(); i++) {
+            gameService.addPlayerCard(gameId, playerId, files.get(i), questions.get(i), answers.get(i));
+        }
     }
 
+    @GetMapping(value = "/images/{name}",
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public @ResponseBody
+    byte[] getImage(@PathVariable String name) throws IOException {
+        String uploadDir = "user-photos/";
+        return FileUploadUtil.readFile(uploadDir, name);
+    }
 }

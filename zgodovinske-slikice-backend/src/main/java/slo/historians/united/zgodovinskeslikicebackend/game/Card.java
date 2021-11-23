@@ -8,5 +8,5 @@ import org.springframework.core.io.Resource;
 public class Card {
     private String question;
     private String answer;
-    private Resource image;
+    private String imageId;
 }

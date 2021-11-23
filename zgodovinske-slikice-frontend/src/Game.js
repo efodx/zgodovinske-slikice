@@ -1,26 +1,92 @@
 import {useEffect, useState} from "react";
 import axios from 'axios'
-import Lobby from "./Lobby";
+import Lobby from "./Lobby/Lobby";
 import InGame from "./InGame/InGame";
 
 
 function Game(props) {
-    const [state, setState] = useState(null);
+    const [state, setState] = useState({
+        files: [],
+        questions: [],
+        answers: []
+    });
 
-    useEffect( () => {
-            const timeout = setTimeout(fetchGameData,1000);
-            return () => clearTimeout(timeout);
+    const [gameData, setGameData] = useState(null)
+
+    const removeImage = (i) => {
+        const files = [...state.files];
+        const questions = [...state.questions]
+        const answers = [...state.answers]
+        files.splice(i, 1);
+        questions.splice(i, 1);
+        answers.splice(i, 1);
+        setState({
+            files: files,
+            questions: questions,
+            answers: answers,
+            data: state.data
+        })
+    }
+
+    function handleQuestionChange(i, value) {
+        const questions = [...state.questions]
+        questions[i] = value;
+        setState({
+            files: state.files,
+            questions: questions,
+            answers: state.answers,
+            data: state.data
+        })
+    }
+
+    function handleAnswerChange(i, value) {
+        const answers = [...state.answers]
+        answers[i] = value
+        setState({
+            files: state.files,
+            questions: state.questions,
+            answers: answers,
+            data: state.data
+        })
+
+    }
+
+    const handleNewFiles = (newFiles) => {
+        const newFilesArray = [...state.files, ...newFiles];
+        const newQuestions = [...state.questions]
+        const newAnswers = [...state.answers]
+
+        newFiles.forEach(() => {
+            newQuestions.push('');
+            newAnswers.push('')
+        })
+
+        console.log('old files len:' + state.files.length)
+        console.log('new files len:' + newFiles.length)
+        console.log('new files arr len:' + newFilesArray.length)
+        setState({
+            files: newFilesArray,
+            questions: newQuestions,
+            answers: newAnswers
+        })
+    }
+
+
+    useEffect(() => {
+        const timeout = setTimeout(fetchGameData, 1000);
+        return () => clearTimeout(timeout);
     })
 
-    const fetchGameData =  () => {
-        axios.get('http://localhost:8080/game/' + props.gameId).then(data=>setState(data.data))
+    const fetchGameData = () => {
+        axios.get('http://localhost:8080/game/' + props.gameId).then(data => setGameData(data.data))
     }
 
     const handleStartGame = async () => {
-        await axios.get('http://localhost:8080/game/' + props.gameId + '/start').catch(p=>p);
+        await axios.get('http://localhost:8080/game/' + props.gameId + '/start').catch(p => p);
         const gameState = await axios.get('http://localhost:8080/game/' + props.gameId);
-        setState(gameState.data);
+        setGameData(gameState.data)
     }
+
     const handleAddCard = async () => {
         await axios.post('http://localhost:8080/game/' + props.gameId + '/addCard', {},
             {
@@ -28,6 +94,7 @@ function Game(props) {
             }
         );
     }
+
     const handleAnswer = async (answer) => {
         await axios.post('http://localhost:8080/game/' + props.gameId + '/answer', {},
             {
@@ -36,14 +103,21 @@ function Game(props) {
         );
     }
 
-
     const renderGame = () => {
-        if (state != null) {
-            if(state.gameState === "LOBBY"){
-                return <Lobby gameState={state} playerId={props.playerId} handleAddCard={handleAddCard} handleOnClick={handleStartGame}/>
+        if (gameData != null) {
+            if (gameData.gameState === "LOBBY") {
+                return <Lobby gameState={gameData} playerId={props.playerId} handleAddCard={handleAddCard}
+                              handleOnClick={handleStartGame}
+                              handleQuestionChange={handleQuestionChange}
+                              handleAnswerChange={handleAnswerChange }
+                              handleNewfiles={handleNewFiles}
+                              removeImage={removeImage}
+                              files={state.files}
+                              answers={state.answers}
+                              questions={state.questions}/>
             }
-            return <InGame playerId={props.playerId} state={state} handleAnswer={handleAnswer}/>
-        }else{
+            return <InGame playerId={props.playerId} state={state.data} handleAnswer={handleAnswer}/>
+        } else {
             return <div> LOADING...</div>
         }
     }
@@ -52,6 +126,7 @@ function Game(props) {
     )
 
 }
+
 function Card(props) {
     const card = props.card;
     return <div>
@@ -60,4 +135,5 @@ function Card(props) {
 
     </div>
 }
+
 export default Game;

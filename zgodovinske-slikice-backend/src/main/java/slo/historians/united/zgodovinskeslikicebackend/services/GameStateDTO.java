@@ -16,7 +16,7 @@ public class GameStateDTO {
     private Card currentCard;
     private List<Player> players;
     private String gameState;
-    private  Map<String, String> answers;
+    private Map<String, String> answers;
     private String ownerId;
     private long timeLeft;
 }

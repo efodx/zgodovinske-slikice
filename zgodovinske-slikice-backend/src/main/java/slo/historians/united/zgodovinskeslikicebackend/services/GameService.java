@@ -1,17 +1,29 @@
 package slo.historians.united.zgodovinskeslikicebackend.services;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.support.ServletContextResource;
+import org.springframework.web.multipart.MultipartFile;
+import slo.historians.united.zgodovinskeslikicebackend.controllers.CardDTO;
+import slo.historians.united.zgodovinskeslikicebackend.game.Card;
 import slo.historians.united.zgodovinskeslikicebackend.game.Game;
+import slo.historians.united.zgodovinskeslikicebackend.utilities.FileUploadUtil;
 
-import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 public class GameService {
     private final Map<String, Game> ongoingGames = new HashMap<>();
     private final Set<String> ids = new HashSet<>();
+
+    @Autowired
+    ServletContext servletContext;
 
     public String addPlayer(String gameId, String playerName) {
         String generatedString = generateRandomString();
@@ -19,8 +31,16 @@ public class GameService {
         return generatedString;
     }
 
-    public void addPlayerCard(String gameId, String playerId) {
-        ongoingGames.get(gameId).playerAddCard(playerId);
+    public void addPlayerCard(String gameId, String playerId, MultipartFile image, String question, String answer) throws IOException {
+        String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+        String uploadDir = "user-photos/";
+        Path path = FileUploadUtil.saveFile(uploadDir, fileName, image);
+
+        Card card  = new Card();
+        card.setAnswer(question);
+        card.setQuestion(answer);
+        card.setImageId(fileName);
+        ongoingGames.get(gameId).playerAddCard(playerId, card);
     }
 
     public void createGame(String id) {
@@ -74,6 +94,7 @@ public class GameService {
                 game.getOwner(),
                 game.getTimeLeft());
     }
+
 }
 
 

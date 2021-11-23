@@ -7,7 +7,8 @@
     height: 90%;
 }
 
-.question-wrapper {word-wrap: anywhere;
+.question-wrapper {
+    word-wrap: anywhere;
     justify-self: center;
     align-self: center;
     background-color: white;
@@ -20,7 +21,7 @@
 .flip-card {
     background: transparent;
     width: 17vw;
-    height: calc(27/17*width);
+    height: calc(27 / 17 * width);
     border: 1px solid #f1f1f1;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
     transition-duration: 1s;
@@ -57,7 +58,7 @@
     border-radius: 5%;
 }
 
-.flip-card-back{
+.flip-card-back {
     box-shadow: 2px 2px 0px 0px;
     text-align: center;
     justify-items: center;
@@ -75,10 +76,10 @@
     transform: rotateY(180deg);
 }
 
-.flip-card.fading{
-opacity:0;
+.flip-card.fading {
+    opacity: 0;
 }
 
-.flip-card.full{
-opacity:1;
+.flip-card.full {
+    opacity: 1;
 }
