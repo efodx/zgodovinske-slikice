@@ -6,15 +6,15 @@ import {CountdownCircleTimer} from "react-countdown-circle-timer";
 
 
 function InGameHeader(props) {
+    //<h1>ID:{props.gameId}</h1>
     return <div className="in-game-header">
-        <h1>ID:{props.gameId}</h1>
+
     </div>
 }
-
+//<h2 className="scores-header">Score</h2>
 function Scores(props) {
     return <div className="scores-container">
-        <h2 className="scores-header">Score</h2>
-        {props.players.map(player => <div key={player.playerId} className="player-score-container">
+        {props.players.map((player,i) => <div key={player.playerId} className="player-score-container">
             <div>{player.playerName} {props.playerAsking === player.id &&
             <Badge bg="secondary">Asking</Badge>}{player.id in props.answers &&
             <Badge bg="primary">Answered</Badge>}</div>
@@ -35,30 +35,12 @@ function Answer(props) {
             handleAnswer();
         }
     }
-    const renderTime = ({remainingTime}) => {
-        return (
-            <div className="timer">
-                <div className="value">{Math.ceil(props.timeLeft / 1000)}</div>
-            </div>
-        );
-    };
+
 
     return (
         <div className="answer-section">
             <div className="answer-section-inner">
-                <div className="timer-wrapper">
-                    <CountdownCircleTimer
-                        isPlaying
-                        duration={60}
-                        initialRemainingTime={props.timeLeft / 1000}
-                        key={props.timeLeft}
-                        size={80}
-                        colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-                        onComplete={() => [false, 1000]}
-                    >
-                        {renderTime}
-                    </CountdownCircleTimer>
-                </div>
+                <SlidingTimer key={props.playerAsking} SlidingTimer {...props}></SlidingTimer>
                 <div className="answer-form">
                     {props.playerAsking != props.playerId &&
                     <input
@@ -80,6 +62,46 @@ function Answer(props) {
     )
 }
 
+function SlidingTimer(props) {
+
+    const [slidingOut, setSlidingOut] = useState(false);
+    const [slidingIn, setSlidingIn] = useState(true);
+    if(slidingIn){
+        setTimeout(()=>setSlidingIn(false), 10)
+    }
+
+    const renderTime = ({remainingTime}) => {
+        if(!slidingIn) {
+            if (props.timeLeft === 0) {
+                setSlidingOut(true);
+            } else {
+                setSlidingOut(false);
+            }
+        }
+        return (
+            <div className="timer">
+                <div className="value">{Math.ceil(props.timeLeft / 1000)}</div>
+            </div>
+        );
+    };
+    return <div className="timer-wrapper">
+        <div className={`inner-timer-wrapper ${slidingOut ? "sliding-out" : ""} ${slidingIn ? "sliding-in" : ""}`}>
+            <CountdownCircleTimer
+                isPlaying
+                duration={60}
+                initialRemainingTime={props.timeLeft / 1000}
+                key={props.timeLeft}
+                size={80}
+                colors={[["#004777", 0.33], ["#72b94c", 0.33], ["#A30000"]]}
+                onComplete={() => [false, 1000]}
+            >
+                {renderTime}
+            </CountdownCircleTimer>
+        </div>
+    </div>
+}
+
+
 function InGame(props) {
     const state = props.state
     return (<div className="whole-game">
@@ -87,7 +109,8 @@ function InGame(props) {
 
             <div className="in-game-info-container">
                 <div className="left-info-container">
-                    <div>Current Player Asking = {state.userAskingId}</div>
+                    <h1>Game</h1>
+                    <h1>{state.gameId}</h1>
                 </div>
                 <div className="middle-info-container">
                     <SelectedCard key={state.userAskingId} card={state.currentCard}/></div>

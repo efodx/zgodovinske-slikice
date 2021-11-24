@@ -2,19 +2,21 @@
 .selected-card-image {
     justify-self: center;
     align-self: center;
-    border-radius: 5%;
     width: 90%;
     height: 90%;
+    border-radius: 4px;
 }
 
 .question-wrapper {
     word-wrap: anywhere;
     justify-self: center;
     align-self: center;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.42);
     width: 90%;
+    height: 70%;
     text-align: center;
     margin-bottom: 15px;
+    border-radius: 3px;
 }
 
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
@@ -22,7 +24,7 @@
     background: transparent;
     width: 17vw;
     height: calc(27 / 17 * width);
-    border: 1px solid #f1f1f1;
+    border: none;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
     transition-duration: 1s;
     transition-property: opacity;
@@ -39,7 +41,7 @@
 }
 
 /* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card.front-side .flip-card-inner {
+.flip-card.front-side .flip-card-inner, .flip-card:hover .flip-card-inner{
     transform: rotateY(180deg);
 }
 
@@ -55,18 +57,20 @@
     padding: 10px;
     display: grid;
     box-shadow: 2px 2px;
-    border-radius: 5%;
 }
 
 .flip-card-back {
     box-shadow: 2px 2px 0px 0px;
+    background-image: url("../back-card.jpg");
+    background-size: 100% 100%;
     text-align: center;
     justify-items: center;
 }
 
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
-    background-color: peru;
+    background-image: url("../front-card.jpg");
+    background-size: 100% 100%;
     color: black;
 }
 

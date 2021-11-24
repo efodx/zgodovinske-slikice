@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from 'axios'
 import Lobby from "./Lobby/Lobby";
 import InGame from "./InGame/InGame";
+import {Spinner} from "react-bootstrap";
 
 
 function Game(props) {
@@ -23,8 +24,7 @@ function Game(props) {
         setState({
             files: files,
             questions: questions,
-            answers: answers,
-            data: state.data
+            answers: answers
         })
     }
 
@@ -34,8 +34,7 @@ function Game(props) {
         setState({
             files: state.files,
             questions: questions,
-            answers: state.answers,
-            data: state.data
+            answers: state.answers
         })
     }
 
@@ -45,8 +44,7 @@ function Game(props) {
         setState({
             files: state.files,
             questions: state.questions,
-            answers: answers,
-            data: state.data
+            answers: answers
         })
 
     }
@@ -83,8 +81,8 @@ function Game(props) {
 
     const handleStartGame = async () => {
         await axios.get('http://localhost:8080/game/' + props.gameId + '/start').catch(p => p);
-        const gameState = await axios.get('http://localhost:8080/game/' + props.gameId);
-        setGameData(gameState.data)
+        const data = await axios.get('http://localhost:8080/game/' + props.gameId);
+        setGameData(data.data)
     }
 
     const handleAddCard = async () => {
@@ -109,16 +107,18 @@ function Game(props) {
                 return <Lobby gameState={gameData} playerId={props.playerId} handleAddCard={handleAddCard}
                               handleOnClick={handleStartGame}
                               handleQuestionChange={handleQuestionChange}
-                              handleAnswerChange={handleAnswerChange }
+                              handleAnswerChange={handleAnswerChange}
                               handleNewfiles={handleNewFiles}
                               removeImage={removeImage}
                               files={state.files}
                               answers={state.answers}
                               questions={state.questions}/>
             }
-            return <InGame playerId={props.playerId} state={state.data} handleAnswer={handleAnswer}/>
+            return <InGame playerId={props.playerId} state={gameData} handleAnswer={handleAnswer}/>
         } else {
-            return <div> LOADING...</div>
+            return <div className="spinner-wrp"><Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner></div>
         }
     }
 
