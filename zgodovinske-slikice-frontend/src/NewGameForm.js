@@ -24,7 +24,7 @@ class NewGameForm extends React.Component {
             <form className="new-game-form" onSubmit={(event) => {
                 this.handleSubmitThroughEnter(event)
             }}>
-                <label>Player Name</label>
+                <label className="option-label">Player Name</label>
                 <div><input className="new-game-txt-input" type="text" placeholder={"Player123"} value={this.state.playerName}
                             onChange={(e) => this.handleNameChange(e)}/></div>
                 <div className="game-selection-button" onClick={()=>this.handleSubmit()}>Create Game</div>

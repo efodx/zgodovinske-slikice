@@ -3,16 +3,13 @@ import axios from 'axios'
 import Game from "./Game";
 import JoinExistingGameForm from "./JoinExistingGameForm";
 import NewGameForm from "./NewGameForm";
+import {Router} from "react-router-dom";
 
 
-function GameSelector(props){
+function GameSelector(props) {
     return (<div className="game-selection">
-        <div className="game-selection-button top-button" onClick={() => props.setGameSelection(1)}>
-            Create New Game
-        </div>
-        <div className="game-selection-button bot-button" onClick={() => props.setGameSelection(2)}>
-            Join Existing Game
-        </div>
+        <div className="game-selection-button top-button" onClick={() => props.setGameSelection(1)}>New Game</div>
+        <div className="game-selection-button bot-button" onClick={() => props.setGameSelection(2)}>Existing Game</div>
     </div>)
 }
 
@@ -43,7 +40,6 @@ function Main() {
     const renderGame = () => {
         {
             if (state.inGame) {
-                console.log('we went in')
                 return <Game gameId={state.id} playerId={state.playerId}/>
             }
             if (gameSelection == null) {
@@ -58,10 +54,11 @@ function Main() {
         }
     }
 
-    return (
-        <div className="main-page">
-            {renderGame()}
-        </div>
+    return (<Router>
+            <div className="main-page">
+                {renderGame()}
+            </div>
+        </Router>
     )
 
 }

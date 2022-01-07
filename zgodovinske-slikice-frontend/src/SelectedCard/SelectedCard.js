@@ -9,8 +9,8 @@ function SelectedCard(props) {
     const card = props.card;
     if (card.image == undefined) {
         card.image = stalin;
-    }else{
-        card.image = 'http://localhost:8080/images/'+card.imageId
+    } else {
+        card.image = 'http://localhost:8080/images/' + card.imageId
     }
     if (fading) {
         setTimeout(() => setFading(false), 1000);
@@ -21,7 +21,8 @@ function SelectedCard(props) {
     return <div className={`flip-card ${turned ? "back-side" : "front-side"} ${fading ? "fading" : "full"}`}>
         <div className="flip-card-inner">
             <div className="flip-card-front">
-                <img className="selected-card-image" src={card.image}/>
+                <div className="selected-card-image-wrp">
+                    <img className="selected-card-image" src={card.image}/></div>
                 <div className="question-wrapper"><p>{card.question}</p></div>
             </div>
             <div className="flip-card-back">

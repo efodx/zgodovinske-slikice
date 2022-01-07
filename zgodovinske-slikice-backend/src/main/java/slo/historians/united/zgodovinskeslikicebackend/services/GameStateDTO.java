@@ -19,4 +19,5 @@ public class GameStateDTO {
     private Map<String, String> answers;
     private String ownerId;
     private long timeLeft;
+    private String innerGameState;
 }

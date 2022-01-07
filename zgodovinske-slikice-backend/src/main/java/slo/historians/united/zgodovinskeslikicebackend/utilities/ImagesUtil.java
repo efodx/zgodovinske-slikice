@@ -2,10 +2,12 @@ package slo.historians.united.zgodovinskeslikicebackend.utilities;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class FileUploadUtil {
+public class ImagesUtil {
 
     public static Path saveFile(String uploadDir, String fileName,
                                 MultipartFile multipartFile) throws IOException {
@@ -30,5 +32,17 @@ public class FileUploadUtil {
         return Files.readAllBytes(filePath);
     }
 
+
+
+    public static List<String> readFileNames(String uploadDir) {
+        Path uploadPath = Paths.get(uploadDir);
+        File folder = uploadPath.toFile();
+        File[] files = folder.listFiles();
+        List<String> fileNames = new ArrayList<>();
+        for (File file : files){
+            fileNames.add(file.getName());
+        }
+        return fileNames;
+    }
 
 }

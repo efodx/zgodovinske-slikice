@@ -2,6 +2,11 @@
     text-align: center;
 }
 
+.drop-zone{
+    display: flex;
+    justify-content: center;
+}
+
 .main-page {
     background-image: url("background-texture.jpg");
     background-size:100% 100%;
@@ -11,6 +16,8 @@
     display: grid;
 }
 
+
+
 .game-selection {
     display: inline-grid;
     align-content: center;
@@ -18,32 +25,47 @@
     justify-content: center;
     justify-self: center;
 }
-
+.game-selection-button:hover{
+    cursor: pointer;
+    box-shadow: 7px 7px 2px black;
+}
 .game-selection-button {
+    background-image: url("selectorBackground2.png");
+    background-size:100% 100%;
     display: inline-flex;
     align-content: center;
-    padding: 15px;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    padding-inline: 50px;
     font-size: min(7vh, 7vw);
-    background: darkgoldenrod;
-    border: 1px solid black;
+    text-shadow:
+            -3px -3px 1px #000,
+            3px -3px 1px #000,
+            -3px 3px 1px #000,
+            3px 3px 1px #000;
+    color: white;
     transition: 0.3s;
+    box-shadow: 5px 5px 2px black;
+    border-radius: 5px;
+    font-weight: bold;
+
 }
 
 .top-button {
     margin-top: auto;
     margin-bottom: 5px;
-    border: 1px solid black;
 }
 
 .bot-button {
     margin-bottom: auto;
     margin-top: 5px;
-    border: 1px solid black;
 }
 
-.bot-button:hover, .top-button:hover {
-    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
-    cursor: pointer;
+.option-label{
+    text-shadow: -4px -4px 1px #000, 4px -4px 1px #000, -4px 4px 1px #000, 4px 4px 1px #000;
+    color: white;
+    font-weight: bold;
 }
 
 .new-game-form {
@@ -60,6 +82,9 @@
 .new-game-txt-input {
     justify-self: center;
     font-size: 7vmin;
+    box-shadow: inset 0px 0px 2px 2px black;
+    width: 100%;
+    border-radius: 3px;
     margin-bottom: 10px;
 }
 

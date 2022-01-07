@@ -3,6 +3,7 @@ import axios from 'axios'
 import Lobby from "./Lobby/Lobby";
 import InGame from "./InGame/InGame";
 import {Spinner} from "react-bootstrap";
+import EndGameLobby from "./EndGameLobby/EndGameLobby";
 
 
 function Game(props) {
@@ -50,6 +51,10 @@ function Game(props) {
     }
 
     const handleNewFiles = (newFiles) => {
+        if(state.files.length + newFiles.length > 5){
+            alert("You must only add 5 files.")
+            return
+        }
         const newFilesArray = [...state.files, ...newFiles];
         const newQuestions = [...state.questions]
         const newAnswers = [...state.answers]
@@ -59,9 +64,6 @@ function Game(props) {
             newAnswers.push('')
         })
 
-        console.log('old files len:' + state.files.length)
-        console.log('new files len:' + newFiles.length)
-        console.log('new files arr len:' + newFilesArray.length)
         setState({
             files: newFilesArray,
             questions: newQuestions,
@@ -85,11 +87,10 @@ function Game(props) {
         setGameData(data.data)
     }
 
-    const handleAddCard = async () => {
-        await axios.post('http://localhost:8080/game/' + props.gameId + '/addCard', {},
-            {
-                params: {playerId: props.playerId, answer: "SOME ANSWER BOY"}
-            }
+    const handleAcceptedAnswers =  async (playerIds) => {
+        let fd = new FormData();
+        fd.append('playerIds', playerIds)
+        await axios.post('http://localhost:8080/game/' + props.gameId + '/acceptAnswers', fd
         );
     }
 
@@ -104,7 +105,7 @@ function Game(props) {
     const renderGame = () => {
         if (gameData != null) {
             if (gameData.gameState === "LOBBY") {
-                return <Lobby gameState={gameData} playerId={props.playerId} handleAddCard={handleAddCard}
+                return <Lobby gameState={gameData} playerId={props.playerId}
                               handleOnClick={handleStartGame}
                               handleQuestionChange={handleQuestionChange}
                               handleAnswerChange={handleAnswerChange}
@@ -113,8 +114,12 @@ function Game(props) {
                               files={state.files}
                               answers={state.answers}
                               questions={state.questions}/>
+            } else if(gameData.gameState === "ENDED"){
+                return <EndGameLobby gameState={gameData} playerId={props.playerId}></EndGameLobby>
             }
-            return <InGame playerId={props.playerId} state={gameData} handleAnswer={handleAnswer}/>
+            return <InGame playerId={props.playerId} state={gameData}
+                           handleAnswer={handleAnswer}
+                           handleAcceptedAnswers={handleAcceptedAnswers}/>
         } else {
             return <div className="spinner-wrp"><Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -125,15 +130,6 @@ function Game(props) {
     return (renderGame()
     )
 
-}
-
-function Card(props) {
-    const card = props.card;
-    return <div>
-        {card.question}?
-        {card.answer}
-
-    </div>
 }
 
 export default Game;

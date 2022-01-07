@@ -1,21 +1,18 @@
 package slo.historians.united.zgodovinskeslikicebackend.controllers;
 
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import slo.historians.united.zgodovinskeslikicebackend.game.HistoryEntry;
 import slo.historians.united.zgodovinskeslikicebackend.services.GameService;
 import slo.historians.united.zgodovinskeslikicebackend.services.GameStateDTO;
-import slo.historians.united.zgodovinskeslikicebackend.utilities.FileUploadUtil;
+import slo.historians.united.zgodovinskeslikicebackend.utilities.ImagesUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MainController {
@@ -33,6 +30,11 @@ public class MainController {
         return gameService.getGameState(gameId);
     }
 
+    @GetMapping("/game/{gameId}/history")
+    public List<HistoryEntry> gameHistory(@PathVariable(value = "gameId") String gameId) {
+        return gameService.getHistory(gameId);
+    }
+
     @PostMapping("/game/{gameId}/join")
     public String joinGame(@PathVariable(value = "gameId") String gameId, @RequestParam String playerName) {
         return gameService.addPlayer(gameId, playerName);
@@ -48,18 +50,16 @@ public class MainController {
         gameService.playerAnswer(gameId, playerId, answer);
     }
 
-//    @PostMapping("/game/{gameId}/addCard")
-//    public void addCard(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId, @RequestParam String answer) {
-//        gameService.addPlayerCard(gameId, playerId);
-//    }
-
     @PostMapping("/game/{gameId}/addCards")
     public void addCards(@PathVariable(value = "gameId") String gameId, @RequestParam String playerId,
                          @RequestParam List<String> questions, @RequestPart List<MultipartFile> files,
                          @RequestParam List<String> answers) throws IOException {
-        for (int i = 0; i < questions.size(); i++) {
-            gameService.addPlayerCard(gameId, playerId, files.get(i), questions.get(i), answers.get(i));
-        }
+        gameService.addPlayerCards(gameId, playerId, files, questions, answers);
+    }
+
+    @PostMapping("/game/{gameId}/acceptAnswers")
+    public void acceptAnswer(@PathVariable(value = "gameId") String gameId, @RequestParam List<String> playerIds) throws IOException {
+        gameService.acceptAnswers(gameId, playerIds);
     }
 
     @GetMapping(value = "/images/{name}",
@@ -67,6 +67,14 @@ public class MainController {
     public @ResponseBody
     byte[] getImage(@PathVariable String name) throws IOException {
         String uploadDir = "user-photos/";
-        return FileUploadUtil.readFile(uploadDir, name);
+        return ImagesUtil.readFile(uploadDir, name);
+    }
+
+
+    @GetMapping(value = "/images")
+    public List<String> getImages() {
+        String uploadDir = "app-photos/";
+        List<String> fileNames = ImagesUtil.readFileNames(uploadDir);
+        return fileNames;
     }
 }
