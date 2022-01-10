@@ -94,6 +94,10 @@ public class GameService {
     public List<HistoryEntry> getHistory(String gameId) {
         return ongoingGames.get(gameId).getHistory();
     }
+
+    public void stillActive(String gameId, String p) {
+        ongoingGames.get(gameId).stillActive(p);
+    }
 }
 
 

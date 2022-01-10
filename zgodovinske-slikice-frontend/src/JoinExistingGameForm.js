@@ -1,39 +1,41 @@
-import React from "react";
+import React, {useState} from "react";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
-class JoinExistingGameForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {playerName: '', gameId:''};
+function JoinExistingGameForm(props) {
+    const [playerName, setPlayerName] = useState("")
+    const [gameId, setGameId] = useState("")
+    const navigate = useNavigate()
+
+    const handleJoinGameSubmit = async () => {
+        const playerId = await axios.post('http://localhost:8080/game/' + gameId + '/join', {},
+            {
+                params: {playerName: playerName}
+            }
+        );
+        navigate("/game?playerId=" + playerId.data + "&gameId=" + gameId)
     }
 
-    handleNameChange(event) {
-        this.setState({playerName: event.target.value});
-    }
 
-    handleIdChange(event) {
-        this.setState({gameId: event.target.value});
-    }
-
-    handleSubmitThroughEnter(event) {
-        this.props.handleSubmit(this.state.playerName, this.state.gameId);
+    function handleSubmitThroughEnter(event) {
+        handleJoinGameSubmit()
         event.preventDefault();
     }
 
-    handleSubmit(){
-        this.props.handleSubmit(this.state.playerName, this.state.gameId);
-    }
 
-    render() {
-        return (
-            <form className="new-game-form" onSubmit={(event)=>{this.handleSubmitThroughEnter(event)}}>
-                <label className="option-label">Player Name</label>
-                <div><input type="text" className="new-game-txt-input" placeholder={"Player123"} value={this.state.playerName} onChange={(e)=>this.handleNameChange(e)}/></div>
-                <label className="option-label">Game Id</label>
-                <div><input type="text" className="new-game-txt-input" placeholder={"uYifXYRTZL"} value={this.state.gameId} onChange={(e)=>this.handleIdChange(e)}/></div>
-                <div className="game-selection-button" onClick={()=>this.handleSubmit()}>Join Game</div>
-            </form>
-        );
-    }
+    return (
+        <form className="new-game-form" onSubmit={(event) => {
+            handleSubmitThroughEnter(event)
+        }}>
+            <label className="option-label">Player Name</label>
+            <div><input type="text" className="new-game-txt-input" placeholder={"Player123"} value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}/></div>
+            <label className="option-label">Game Id</label>
+            <div><input type="text" className="new-game-txt-input" placeholder={"uYifXYRTZL"} value={gameId}
+                        onChange={(e) => setGameId(e.target.value)}/></div>
+            <div className="game-selection-button" onClick={() => handleJoinGameSubmit()}>Join Game</div>
+        </form>
+    );
 }
 
 export default JoinExistingGameForm

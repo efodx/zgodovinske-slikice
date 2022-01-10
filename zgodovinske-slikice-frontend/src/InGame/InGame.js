@@ -3,6 +3,7 @@ import './InGame.css'
 import {useState} from "react";
 import {Badge, Button, Form, ProgressBar} from "react-bootstrap";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
+import {Tooltip} from "@mui/material";
 
 
 function InGameHeader(props) {
@@ -31,9 +32,7 @@ function getTallyMarks(number) {
 function Scores(props) {
     return <div className="scores-container">
         {props.players.map((player, i) => <div key={player.playerId} className="player-score-container">
-            <div>{player.playerName}{" "}{props.playerAsking === player.id &&
-            <Badge bg="secondary">Asking</Badge>}{player.id in props.answers &&
-            <Badge bg="primary">Answered</Badge>}</div>
+            <div>{player.playerName}{"  "}{props.playerAsking === player.id && '?'}{player.id in props.answers && '✔'}</div>
             <div>{getTallyMarks(player.points)}</div>
         </div>)}
     </div>
@@ -188,8 +187,10 @@ function InGame(props) {
 
             <div className="in-game-info-container">
                 <div className="left-info-container">
-                    <h1>Game</h1>
-                    <h1>{state.gameId}</h1>
+                    <Tooltip title={"Copy game link to clipboard"}><Button variant="contained" onClick={() => {
+                        navigator.clipboard.writeText("http://localhost:3000/game?gameId=" + state.gameId)
+                    }}>ID: {state.gameId}</Button></Tooltip>
+
                 </div>
                 <div className="middle-info-container">
                     {state.innerGameState === "ACCEPTING_ANSWERS" && state.userAskingId == props.playerId &&

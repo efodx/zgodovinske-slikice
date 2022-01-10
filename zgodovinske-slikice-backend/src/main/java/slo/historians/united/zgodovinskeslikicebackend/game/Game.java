@@ -2,6 +2,7 @@ package slo.historians.united.zgodovinskeslikicebackend.game;
 
 import lombok.SneakyThrows;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -22,6 +23,8 @@ public class Game {
     private boolean shouldTimeOut = false;
     private boolean acceptingAnswers = false;
     private List<HistoryEntry> history = new ArrayList<>();
+    private final int inactivityTimeout = 180;
+    private final Map<String, Long> lastActive = new HashMap<>();
 
     public String getInnerGameState() {
         return innerGameState.toString();
@@ -60,6 +63,10 @@ public class Game {
         }
     }
 
+    private boolean playerIsActive(String playerId) {
+        return Instant.now().getEpochSecond() - lastActive.get(playerId) < inactivityTimeout;
+    }
+
     private boolean timedOut(long endTime) {
         if (shouldTimeOut) {
             return System.currentTimeMillis() < endTime;
@@ -71,7 +78,8 @@ public class Game {
     public void waitForAnswers() {
         innerGameState = InnerGameState.WAITING_FOR_ANSWERS;
         endTime = System.currentTimeMillis() + Rules.ANSWERS_TIMEOUT;
-        while (answers.size() < players.size() - 1 && !timedOut(endTime)) {
+        List<Player> activePlayers = players.stream().filter(p -> playerIsActive(p.getId())).collect(Collectors.toList());
+        while (answers.size() < activePlayers.size() - 1 && !timedOut(endTime)) {
             sleepFor(100);
         }
     }
@@ -85,13 +93,14 @@ public class Game {
     }
 
     public void addPlayer(String id, String playerName) {
+        if (playerName.equals("ucitelj")) {
+            return;
+        }
         Player player = new Player(id, playerName);
         if (players.size() < Rules.MAX_NUMBER_OF_PLAYERS && gameState == GameState.LOBBY) {
             players.add(player);
         } else {
-            if (!playerName.equals("ucitelj")) {
-                throw new IllegalStateException("Game is already full.");
-            }
+            throw new IllegalStateException("Game is already full.");
         }
         if (players.size() == 1) {
             ownerId = id;
@@ -125,6 +134,7 @@ public class Game {
         }
 
         gameState = GameState.PLAYING;
+        players.forEach(p -> lastActive.put(p.getId(), Instant.now().getEpochSecond()));
 
         selectFirstPlayer();
 
@@ -241,6 +251,9 @@ public class Game {
         return Math.max(0, endTime - System.currentTimeMillis());
     }
 
+    public void stillActive(String p) {
+        lastActive.put(p, Instant.now().getEpochSecond());
+    }
 }
 
 enum GameState {

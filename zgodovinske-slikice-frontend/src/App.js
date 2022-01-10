@@ -3,10 +3,12 @@ import './App.css';
 import './Lobby/Lobby.css';
 import Main from "./Main";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {BrowserRouter, Router} from "react-router-dom";
 
 function App() {
     return (
-        <Main/>
+<BrowserRouter>
+        <Main/></BrowserRouter>
     );
 }
 

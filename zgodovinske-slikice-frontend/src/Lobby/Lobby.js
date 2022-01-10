@@ -4,15 +4,14 @@ import axios from 'axios'
 import {Badge} from "react-bootstrap";
 import ImagePicker from 'react-image-picker'
 import 'react-image-picker/dist/index.css'
+import Button from '@mui/material/Button';
+import { Tooltip } from '@mui/material';
 
 
 function Player(props) {
     const player = props.player
     return <li>
-        <div className="player-name"> {player.playerName}{" "}{player.cards.length == 5 &&
-        <div className={"badge-wrapper"}><Badge pill bg="success">
-            Ready
-        </Badge></div>}</div>
+        <div  className={`player-name`}> {player.playerName}{player.cards.length == 5 ? '✔' : ''}</div>
     </li>
 }
 
@@ -78,6 +77,16 @@ function Lobby(props) {
                                                          handleAnswerChange={(value) => handleAnswerChange(i, value)}
         />)
     }
+    function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
 
     const handleAddCards = async () => {
         if (props.questions.length != 5) {
@@ -87,7 +96,7 @@ function Lobby(props) {
         let fd = new FormData();
         fd.append('questions', props.questions)
         fd.append('answers', props.answers)
-        props.files.forEach(file => fd.append('files', file))
+        props.files.forEach(file => fd.append('files', file, makeid(10)))
         await axios.post('http://localhost:8080/game/' + props.gameState.gameId + '/addCards', fd,
             {
                 params: {playerId: props.playerId},
@@ -122,7 +131,7 @@ function Lobby(props) {
             <div className="lobby-center-wrapper">
                 <div className="game-info-wrapper">
                     <div key={'game-id'} className="game-id">
-                        <h2>ID: {props.gameState.gameId}</h2>
+                       <Tooltip title={"Copy game link to clipboard"}><Button variant="contained" onClick={() => {navigator.clipboard.writeText("http://localhost:3000/game?gameId=" + props.gameState.gameId)}}>ID: {props.gameState.gameId}</Button></Tooltip>
                     </div>
                     <div key={'players-info-wrapper'} className="players-info-wrapper">
                         <div key={"players-info-header"} className="players-info-header">

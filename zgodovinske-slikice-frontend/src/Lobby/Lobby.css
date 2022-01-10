@@ -71,7 +71,14 @@
     padding: 1vmin;
     border-radius: 2px;
 }
+.linkbutton{
+    cursor: pointer;
+    padding: 4px;
+    background-color: rgba(147, 87, 3, 0.62);
+    width: 40%;
+    border: 1px solid;
 
+}
 .pick-selector >*.selected{
     background-color: rgba(147, 87, 3, 0.62);
 }
@@ -174,6 +181,11 @@
 
 .player-name {
     width: 50%;
+}
+
+.player-name.ready{
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: rgba(255, 248, 151, 0.85);
 }
 
 .image-preview {

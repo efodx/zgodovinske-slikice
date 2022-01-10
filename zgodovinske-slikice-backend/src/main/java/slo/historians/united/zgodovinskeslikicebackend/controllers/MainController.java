@@ -11,7 +11,9 @@ import slo.historians.united.zgodovinskeslikicebackend.services.GameStateDTO;
 import slo.historians.united.zgodovinskeslikicebackend.utilities.ImagesUtil;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,7 +28,8 @@ public class MainController {
     }
 
     @GetMapping("/game/{gameId}")
-    public GameStateDTO showGame(@PathVariable(value = "gameId") String gameId) {
+    public GameStateDTO showGame(@PathVariable(value = "gameId") String gameId, @RequestParam Optional<String> playerId) {
+        playerId.ifPresent(p->gameService.stillActive(gameId,p));
         return gameService.getGameState(gameId);
     }
 
@@ -66,8 +69,13 @@ public class MainController {
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
     byte[] getImage(@PathVariable String name) throws IOException {
-        String uploadDir = "user-photos/";
-        return ImagesUtil.readFile(uploadDir, name);
+        try {
+            String uploadDir = "user-photos/";
+            return ImagesUtil.readFile(uploadDir, name);
+        } catch (NoSuchFileException e){
+            String uploadDir = "app-photos/";
+            return ImagesUtil.readFile(uploadDir, name);
+        }
     }
 
 

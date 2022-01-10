@@ -1,36 +1,37 @@
-import React from "react";
+import React, {useState} from "react";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
-class NewGameForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {playerName: ''};
+function NewGameForm(props) {
+    const [playerName, setPlayerName] = useState('');
+    const navigate = useNavigate();
+    const handleSubmit = async () => {
+        const gameId = await axios.get('http://localhost:8080/game/create');
+        const playerId = await axios.post('http://localhost:8080/game/' + gameId.data + '/join', {},
+            {
+                params: {playerName: playerName}
+            }
+        );
+        navigate("/game?playerId=" + playerId.data + "&gameId=" + gameId.data)
     }
 
-    handleNameChange(event) {
-        this.setState({playerName: event.target.value});
-    }
-
-    handleSubmit() {
-        this.props.handleSubmit(this.state.playerName);
-    }
-
-    handleSubmitThroughEnter(event) {
-        this.props.handleSubmit(this.state.playerName);
+    function handleSubmitThroughEnter(event) {
+        handleSubmit();
         event.preventDefault();
     }
 
-    render() {
-        return (
-            <form className="new-game-form" onSubmit={(event) => {
-                this.handleSubmitThroughEnter(event)
-            }}>
-                <label className="option-label">Player Name</label>
-                <div><input className="new-game-txt-input" type="text" placeholder={"Player123"} value={this.state.playerName}
-                            onChange={(e) => this.handleNameChange(e)}/></div>
-                <div className="game-selection-button" onClick={()=>this.handleSubmit()}>Create Game</div>
-            </form>
-        );
-    }
+
+    return (
+        <form className="new-game-form" onSubmit={(event) => {
+            handleSubmitThroughEnter(event)
+        }}>
+            <label className="option-label">Player Name</label>
+            <div><input className="new-game-txt-input" type="text" placeholder={"Player123"}
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}/></div>
+            <div className="game-selection-button" onClick={() => handleSubmit()}>Create Game</div>
+        </form>
+    );
 
 }
 

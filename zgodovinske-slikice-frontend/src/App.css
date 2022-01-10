@@ -14,8 +14,17 @@
     height: 100vh;
     align-content: center;
     display: grid;
+    font-family:myFont;
 }
 
+.question-wrapper{
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+    font-family:myFont;
+    src:url("Metamorphous-Regular.ttf")
+}
 
 
 .game-selection {
@@ -27,29 +36,39 @@
 }
 .game-selection-button:hover{
     cursor: pointer;
-    box-shadow: 7px 7px 2px black;
+
+    color: #ffffff;
 }
+
 .game-selection-button {
+    /*
     background-image: url("selectorBackground2.png");
     background-size:100% 100%;
-    display: inline-flex;
-    align-content: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    padding-inline: 50px;
-    font-size: min(7vh, 7vw);
-    text-shadow:
+        text-shadow:
             -3px -3px 1px #000,
             3px -3px 1px #000,
             -3px 3px 1px #000,
             3px 3px 1px #000;
+
+    box-shadow: 5px 5px 2px black;
     color: white;
     transition: 0.3s;
-    box-shadow: 5px 5px 2px black;
     border-radius: 5px;
     font-weight: bold;
+    padding: 20px;
+    padding-inline: 50px;
 
+    */
+    display: inline-flex;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 9vmin;
+    color: #dca901;
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: black;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .top-button {
@@ -63,9 +82,13 @@
 }
 
 .option-label{
-    text-shadow: -4px -4px 1px #000, 4px -4px 1px #000, -4px 4px 1px #000, 4px 4px 1px #000;
-    color: white;
+    color: #dca901;
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: black;
     font-weight: bold;
+}
+.game-id > .css-sghohy-MuiButtonBase-root-MuiButton-root, .game-id > .css-sghohy-MuiButtonBase-root-MuiButton-root:hover{
+    background-color: #e0a762;
 }
 
 .new-game-form {

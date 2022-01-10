@@ -84,9 +84,10 @@
 }
 .answer-button {
     height: 100%;
-    background-image: url("../newbtn.svg");
+    background-color: #eea247;
     background-size:100% 100%;
     box-shadow: 3px 3px 1px black;
+    border: 1px black solid;
     border-radius: 10px;
     padding: 20px;
     margin-left: 5px;
