@@ -233,7 +233,7 @@ public class Game {
             players.stream().filter(p -> p.getId().equals(userAskingId)).findFirst().orElseThrow().addPoints(1);
         }
         boolean anyWinners = players.stream().anyMatch(Player::hasWon);
-        history.add(new HistoryEntry(userAskingId, answers, acceptedAnswers, currentCard));
+        history.add(new HistoryEntry(userAskingId, new HashMap<>(answers), new ArrayList<>(acceptedAnswers), currentCard));
         if (anyWinners) {
             gameState = GameState.ENDED;
         } else {
